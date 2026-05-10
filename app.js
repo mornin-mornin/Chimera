@@ -200,11 +200,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateAdSpace(hasNsfw) {
-        if (hasNsfw) {
-            adSpace.classList.add('hidden');
-        } else {
-            adSpace.classList.remove('hidden');
-        }
+        // AdSense審査通過後に下記コメントを外して広告を再有効化
+        // if (hasNsfw) {
+        //     adSpace.classList.add('hidden');
+        // } else {
+        //     adSpace.classList.remove('hidden');
+        // }
+
+        // 審査通過まで常に非表示
+        adSpace.classList.add('hidden');
     }
 
     function renderHistory() {
@@ -352,13 +356,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 広告の動的表示切替
+        // AdSense審査通過後に下記コメントを外して広告を再有効化
         const charAdSpace = document.getElementById('char-ad-space');
         if (charAdSpace) {
-            if (data.hasNsfw) {
-                charAdSpace.classList.add('hidden');
-            } else {
-                charAdSpace.classList.remove('hidden');
-            }
+            // if (data.hasNsfw) {
+            //     charAdSpace.classList.add('hidden');
+            // } else {
+            //     charAdSpace.classList.remove('hidden');
+            // }
+
+            // 審査通過まで常に非表示
+            charAdSpace.classList.add('hidden');
         }
 
         summonBook.parentElement.style.display = 'none';
