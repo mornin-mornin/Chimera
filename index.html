@@ -1,0 +1,198 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>キメラ辞典 - 偶然の言葉と出会う</title>
+    
+    <!-- SEO & OGP -->
+    <meta name="description" content="ランダムな単語、難読漢字、四字熟語、そして未知の言葉と出会える「キメラ辞典」。創作のアイデア出しや学習に最適です。">
+    <meta name="keywords" content="キメラ辞典, 単語ガチャ, 乱数, 漢字検定, 創作支援, アイデア出し, 語彙力">
+    <meta property="og:title" content="キメラ辞典 - 偶然の言葉と出会う">
+    <meta property="og:description" content="美しい日本語や難解な熟語を引く、知的好奇心を満たすガチャアプリ。">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="キメラ辞典">
+    <meta name="twitter:card" content="summary">
+
+    <!-- 構造化データ (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "キメラ辞典",
+      "description": "ランダムな単語や難読漢字と出会える辞書・学習用アプリケーション。",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All"
+    }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Noto Serif JP (明朝体) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- ヘッダー -->
+        <header>
+            <h1 class="title" id="main-title" style="cursor: pointer;">キメラ辞典</h1>
+            <div class="settings" style="flex-wrap: wrap; justify-content: flex-end; gap: 15px;">
+                <div class="view-tabs">
+                    <button id="nav-character" class="view-tab active">召喚</button>
+                    <button id="nav-gacha" class="view-tab">語録</button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span class="setting-label">ルビ（ふりがな）</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="rubi-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </header>
+
+        <!-- 【ビュー1】：語録（旧単語ガチャ） -->
+        <div id="view-gacha" class="view-section" style="display:none;">
+
+            <div class="tabs" id="main-tabs">
+                <button class="tab active" data-category="all">すべて</button>
+                <button class="tab" data-category="creative">創作・情景</button>
+                <button class="tab" data-category="kanji">難読</button>
+                <button class="tab" data-category="trivia">カオス</button>
+                <button class="tab" data-category="proverb">ことわざ</button>
+            </div>
+            
+            <!-- 難読サブフィルター (デフォルト非表示) -->
+            <div class="sub-tabs hidden" id="kanji-sub-tabs">
+                <button class="sub-tab active" data-level="level1">難易度：極</button>
+                <button class="sub-tab" data-level="level_pre1">難易度：高</button>
+                <button class="sub-tab" data-level="level2">難易度：中</button>
+                <button class="sub-tab" data-level="level_low">難易度：低</button>
+            </div>
+        </section>
+
+        <!-- ガチャ結果エリア -->
+        <section class="result-section">
+            <div id="result-container" class="result-container">
+                <!-- ここにカードが入ります -->
+                <div class="empty-state">祈りを捧ぎ、啓示をお持ちください...</div>
+            </div>
+            <!-- SNSシェアボタン -->
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="share-btn" class="sub-tab" style="padding: 10px 20px; font-weight: bold; display: none; background: #000; color: #fff;">
+                    𝕏 結果をポストする
+                </button>
+            </div>
+        </section>
+
+        <!-- ガチャ操作エリア -->
+        <section class="controls-section">
+            <div class="pull-count-control">
+                <span class="pull-label">排出数: <span id="pull-count-display">1</span>個</span>
+                <input type="range" id="pull-slider" min="1" max="10" value="1">
+            </div>
+            <button id="gacha-btn" class="gacha-btn">
+                頁をめくる
+            </button>
+        </section>
+
+        <!-- 広告スペース (ダミー) -->
+        <div id="ad-space" class="ad-space">
+            <span>[ 広告スペース ]</span>
+            <small>※過激な言葉が出た時だけ消滅します</small>
+        </div>
+
+        <!-- 履歴エリア -->
+        <section class="history-section">
+            <h2>履歴</h2>
+            <div id="history-list" class="history-list">
+                <!-- 履歴がここに入ります -->
+            </div>
+        </section>
+        </div> <!-- /view-gacha -->
+
+        <!-- 【ビュー2】：キャラクター生成モード -->
+        <div id="view-character" class="view-section">
+            <div class="summon-container">
+                <div class="grimoire" id="summon-book">
+                    <div class="book-cover">
+                        <div class="arcane-runes" style="margin-bottom: 5px;">
+                            <svg viewBox="0 0 100 200" width="35" height="120" style="filter: drop-shadow(0 0 5px var(--gold-accent));">
+                                <path d="M 50 10 L 50 190" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M 30 30 L 70 30 M 40 40 L 60 40 L 50 15 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+                                <path d="M 50 70 L 20 60 L 20 50 M 50 90 L 80 100 l 0 10 M 50 140 L 30 160 L 30 170 M 50 150 L 70 130 L 80 130" stroke="currentColor" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="50" cy="110" r="16" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <circle cx="50" cy="110" r="4" fill="currentColor"/>
+                                <path d="M 25 100 A 25 25 0 0 1 75 100" fill="none" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <p style="font-size: 0.7rem; margin-top: 10px;">TAP TO SUMMON</p>
+                    </div>
+                    <div class="book-pages">
+                        ✨
+                    </div>
+                </div>
+            </div>
+
+            <div id="character-result" class="character-card hidden">
+                <div class="char-avatar-wrapper">
+                    <img id="char-avatar-img" class="char-avatar" src="" alt="Avatar">
+                </div>
+                <div class="char-header">
+                    <div id="char-title" class="char-title"></div>
+                    <div id="char-name" class="char-name"></div>
+                </div>
+
+                <div class="char-details">
+                    <div class="detail-item">
+                        <span class="detail-label">種族</span>
+                        <div id="char-race" class="detail-value"></div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">好きなもの</span>
+                        <div id="char-likes" class="detail-value"></div>
+                    </div>
+                </div>
+
+                <div class="char-stats" id="char-stats-container">
+                    <!-- JSにて動的生成 -->
+                </div>
+                
+                <button id="summon-again-btn" class="gacha-btn" style="margin-top: 15px;">再召喚</button>
+            </div>
+
+            <!-- さりげないXポストボタン -->
+            <div style="text-align: center; margin-top: 15px;">
+                <button id="char-share-btn" class="gacha-btn" style="display: none; background-color: #fdfbf7; color: #16120d; font-size: 0.95rem; padding: 10px 30px; border: 2px solid #3b3024;">
+                    結果をXにポスト
+                </button>
+            </div>
+
+            <!-- キャラ召喚モード用広告エリア -->
+            <div id="char-ad-space" class="ad-space" style="margin-top: 30px;">
+                <p style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px;">スポンサーリンク</p>
+                <!-- ここにGoogle AdSenseなどのコードを配置 -->
+            </div>
+
+            <!-- 🌍 擬似グローバル履歴エリア -->
+            <div class="global-history-section" style="margin-top: 40px; width: 100%;">
+                <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">🌍 現在の召喚記録</h3>
+                <div id="global-history-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- JSにて自動追加 -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- コピーライトおよびライセンスフッター -->
+    <footer style="text-align: center; margin-top: 40px; padding: 20px; font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid var(--border-color);">
+        <p style="margin-bottom: 10px;">
+            <a href="terms.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">利用規約</a>
+        </p>
+        <p>This software uses data from the <a href="http://www.edrdg.org/jmdict/j_jmdict.html" target="_blank" style="color: var(--text-secondary); text-decoration: underline;">JMdict</a> dictionary project (CC BY-SA 3.0).</p>
+    </footer>
+
+    <!-- データベース遅延読み込みとロジック -->
+    <script src="db_custom.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

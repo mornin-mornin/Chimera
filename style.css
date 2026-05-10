@@ -1,0 +1,675 @@
+:root {
+    /* カラーパレット：辞書の紙色（オフホワイト）＆イエロー */
+    --bg-color: #fdfbf7;        /* 辞書の紙のような目に優しいアイボリー */
+    --paper-color: transparent; /* 背景なし */
+    --text-primary: #1c1b18;    /* 活版印刷のインクに似せた少し温かみのある黒 */
+    --text-secondary: #6e6a64;  /* 紙色に馴染むグレー */
+    --gold-accent: #fcc200;     /* ワンポイントのイエロー */
+    --gold-dim: rgba(252, 194, 0, 0.15); 
+    --border-color: #e6e2d8;    /* 紙の影に合わせた枠線色 */
+    
+    /* フォント設定 */
+    --font-serif: 'Noto Serif JP', 'Sawarabi Mincho', serif;
+}
+
+/* 魔法の魔導書テーマ用オーバーライド（キャラ生成モード時に付与） */
+body.theme-dark-magic {
+    --bg-color: #16120d;         /* 深い闇 */
+    --paper-color: #201a14;      /* 暗い洋皮紙 */
+    --text-primary: #f0e6d2;     /* 淡い金色の文字 */
+    --text-secondary: #998c7a;   /* 暗い文字 */
+    --border-color: #3b3024;     /* 金色の縁取り風 */
+    --gold-accent: #fcc200;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+    line-height: 1.6;
+    /* シャープで無機質な完全な黒背景 */
+    background-image: none;
+    min-height: 100vh;
+    padding-bottom: 40px;
+}
+
+.app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ヘッダー */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+    letter-spacing: 2px;
+}
+
+.settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* ビュー切替トグル */
+.view-tabs {
+    display: flex;
+    background: var(--paper-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+}
+.view-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.view-tab.active {
+    background: var(--text-primary);
+    color: #ffffff;
+}
+body.theme-dark-magic .view-tab.active {
+    background: var(--gold-accent);
+    color: #16120d; /* 闇黒に対する強調テキスト */
+}
+
+/* トグルスイッチ */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #e0e0e0;
+    transition: .4s;
+    border-radius: 20px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ffffff;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+input:checked + .slider {
+    background-color: var(--gold-accent);
+}
+input:checked + .slider:before {
+    transform: translateX(20px);
+    background-color: #111111;
+}
+
+/* カテゴリタブ */
+.category-section {
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    scrollbar-width: none; /* Firefox用 */
+}
+.tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari用 */
+}
+
+.tab {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0; /* タブが見切れないようにする */
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background: var(--gold-dim);
+    color: var(--gold-accent);
+    border-color: var(--gold-accent);
+}
+
+.sub-tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 2px solid var(--gold-dim);
+}
+.sub-tabs.hidden {
+    display: none;
+}
+.sub-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+.sub-tab.active {
+    background: var(--text-primary);
+    color: #ffffff;
+}
+
+/* 結果エリア */
+.result-section {
+    min-height: 200px;
+    margin-bottom: 30px;
+}
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 60px 0;
+    opacity: 0.5;
+}
+
+/* 単語カード（空間に浮かぶ文字としての表現） */
+.word-card {
+    background-color: var(--paper-color);
+    border: none;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+    
+    /* シャープな出現アニメーション */
+    animation: divineRevelation 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+    filter: blur(10px);
+}
+
+@keyframes divineRevelation {
+    0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: scale(1.05);
+        color: var(--gold-accent); /* 一瞬だけ黄色く光る */
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: scale(1);
+        color: var(--text-primary);
+    }
+}
+
+/* ルビ・漢字の構成 */
+ruby {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+rt {
+    font-size: 0.9rem;
+    color: #6e6a64; /* 視認性を劇的に向上させるダークグレー */
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: bold; /* 少しだけ太く */
+    transition: opacity 0.3s;
+}
+
+/* ルビ非表示（クイズ）モード */
+.hide-rubi rt {
+    opacity: 0;
+}
+.hide-rubi ruby {
+    cursor: pointer; /* タップ可能を示す */
+}
+.hide-rubi ruby.revealed rt {
+    opacity: 1; /* タップで表示 */
+}
+
+/* カテゴリバッジ */
+.card-category {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    border: 1px solid #444;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* ギャチャ操作エリア */
+.controls-section {
+    background: var(--paper-color);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.pull-count-control {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pull-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+}
+
+#pull-count-display {
+    color: var(--gold-accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--gold-accent);
+    cursor: pointer;
+    margin-top: -6px;
+    box-shadow: 0 0 10px rgba(252, 194, 0, 0.5);
+}
+
+.gacha-btn {
+    width: 100%;
+    padding: 18px;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111111; /* 背景が黄色なので黒文字 */
+    background: var(--gold-accent);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(252, 194, 0, 0.4);
+    transition: all 0.2s ease;
+    letter-spacing: 4px;
+}
+
+.gacha-btn:hover {
+    background: #ffd633;
+    box-shadow: 0 4px 20px rgba(252, 194, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+.gacha-btn:active {
+    transform: scale(0.98);
+}
+
+.gacha-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(212, 175, 55, 0.2);
+}
+
+/* 広告スペース */
+.ad-space {
+    background-color: #f5f3f0;
+    border: 1px dashed #d1cdc8;
+    padding: 20px;
+    text-align: center;
+    color: #99958e;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.ad-space.hidden {
+    display: none;
+}
+
+/* 履歴エリア */
+.history-section h2 {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.history-word {
+    color: var(--text-primary);
+}
+
+.history-yomi {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+/* ==================================
+   キャラクター生成モード (Phase 6)
+================================== */
+#view-character {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 魔導書の3Dアニメーション */
+.summon-container {
+    perspective: 1200px;
+    display: flex;
+    justify-content: center;
+    padding: 50px 0;
+}
+.grimoire {
+    width: 200px;
+    height: 280px;
+    position: relative;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s;
+}
+.grimoire:hover {
+    transform: translateY(-5px) scale(1.05);
+    filter: drop-shadow(0 15px 25px rgba(252, 194, 0, 0.4));
+}
+.book-cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2b2210, #140f05);
+    border: 3px solid var(--gold-accent);
+    border-radius: 4px 12px 12px 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--gold-accent);
+    transform-origin: left center;
+    transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 3;
+    backface-visibility: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+.book-cover h3 {
+    font-size: 1.4rem;
+    letter-spacing: 5px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+/* ページ部分構成 */
+.book-pages {
+    position: absolute;
+    width: 95%;
+    height: 96%;
+    top: 2%;
+    left: 2%;
+    background: #fdfbf7;
+    border-radius: 2px 8px 8px 2px;
+    z-index: 1;
+    box-shadow: inset -5px 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #6e6a64;
+}
+.grimoire.open .book-cover {
+    transform: rotateY(-160deg);
+}
+.grimoire.open .book-pages {
+    animation: flash 1.2s forwards;
+}
+@keyframes flash {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(2) drop-shadow(0 0 30px #fcc200); }
+    100% { filter: brightness(1); }
+}
+
+/* キャラクターカードUI */
+.character-card {
+    background: var(--paper-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: divineRevelation 0.8s forwards;
+}
+.character-card.hidden {
+    display: none;
+}
+.char-avatar-wrapper {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.05);
+    border: 2px solid var(--border-color);
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.char-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.char-header {
+    text-align: center;
+}
+.char-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+.char-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--gold-accent);
+    padding-bottom: 5px;
+    letter-spacing: 2px;
+}
+.char-name ruby { font-size: inherit; letter-spacing: inherit; }
+.char-title ruby { font-size: inherit; letter-spacing: inherit; }
+.char-details {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.detail-item {
+    background: rgba(0,0,0,0.03);
+    padding: 10px;
+    border-radius: 8px;
+}
+.detail-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 4px;
+}
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* ステータスバー領域 */
+.char-stats {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* 2行になった時のために行間を少し広く */
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.stat-name {
+    width: 90px; /* 余白を設けつつ最大文字数が入るように幅固定 */
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+    text-align: left; /* 元の左寄せレイアウトに戻す */
+    white-space: normal; /* 折り返しを許可 */
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+}
+.stat-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+body.theme-dark-magic .stat-bar-bg {
+    background: #3b3024; /* ダークテーマ用にはっきりした下地色 */
+}
+.stat-bar-fill {
+    height: 100%;
+    background: var(--gold-accent); /* メインの金色に変更 */
+    width: 0%;
+    transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.stat-val {
+    width: 30px;
+    font-size: 0.85rem;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* ==================================
+   グローバル履歴（幻影）アニメーション UI
+================================== */
+.global-history-item {
+    display: flex;
+    align-items: center;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    animation: slideInDown 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.global-history-item:hover {
+    background: rgba(255,255,255,0.05);
+    transform: translateX(5px) !important;
+}
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.gh-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    margin-right: 15px;
+    border: 1px solid var(--border-color);
+}
+.gh-info {
+    display: flex;
+    flex-direction: column;
+}
+.gh-title {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+.gh-name {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 2px 0;
+}
+.gh-meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+

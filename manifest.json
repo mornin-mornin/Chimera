@@ -1,0 +1,21 @@
+{
+  "name": "キメラ辞典",
+  "short_name": "キメラ辞典",
+  "description": "偶然の言葉と出会う、知的好奇心を満たすWebアプリ",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#16120d",
+  "theme_color": "#16120d",
+  "icons": [
+    {
+       "src": "icon-192.png",
+       "sizes": "192x192",
+       "type": "image/png"
+    },
+    {
+       "src": "icon-512.png",
+       "sizes": "512x512",
+       "type": "image/png"
+    }
+  ]
+}
