@@ -371,15 +371,9 @@ input[type=range]::-webkit-slider-thumb {
 
 /* 広告スペース */
 .ad-space {
-    background-color: #f5f3f0;
-    border: 1px dashed #d1cdc8;
-    padding: 20px;
-    text-align: center;
-    color: #99958e;
     margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    min-height: 90px;
+    overflow: hidden;
 }
 .ad-space.hidden {
     display: none;
@@ -485,114 +479,22 @@ input[type=range]::-webkit-slider-thumb {
     border-radius: 2px 8px 8px 2px;
     z-index: 1;
     box-shadow: inset -5px 0 10px rgba(0,0,0,0.1);
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 2rem;
+    color: #6e6a64;
 }
 .grimoire.open .book-cover {
     transform: rotateY(-160deg);
 }
 .grimoire.open .book-pages {
-    animation: flash 1.4s forwards;
+    animation: flash 1.2s forwards;
 }
 @keyframes flash {
-    0%   { filter: brightness(1); }
-    40%  { filter: brightness(3) drop-shadow(0 0 30px #fcc200); }
+    0% { filter: brightness(1); }
+    50% { filter: brightness(2) drop-shadow(0 0 30px #fcc200); }
     100% { filter: brightness(1); }
-}
-
-/* リングエフェクト */
-.burst-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid #fcc200;
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-    pointer-events: none;
-}
-.grimoire.open .burst-ring {
-    animation: ringExpand 0.8s 0.1s ease-out forwards;
-}
-.grimoire.open .burst-ring:nth-child(2) {
-    animation-delay: 0.25s;
-    border-color: rgba(252, 194, 0, 0.5);
-}
-@keyframes ringExpand {
-    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0.9; }
-    100% { transform: translate(-50%, -50%) scale(8); opacity: 0; }
-}
-
-/* パーティクルコンテナ */
-.particle-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
-    pointer-events: none;
-    opacity: 0;
-}
-.grimoire.open .particle-container {
-    animation: particleFadeIn 0.3s 0.1s forwards;
-}
-@keyframes particleFadeIn {
-    to { opacity: 1; }
-}
-
-/* 個々のパーティクル */
-.particle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #fcc200;
-    transform: translate(-50%, -50%);
-    animation: particleBurst 1.2s ease-out forwards;
-}
-.particle.large {
-    width: 7px;
-    height: 7px;
-    background: #fff;
-    box-shadow: 0 0 6px #fcc200;
-}
-.particle.line {
-    width: 2px;
-    height: 12px;
-    border-radius: 2px;
-    background: rgba(252, 194, 0, 0.7);
-}
-.p1  { --tx: -60px; --ty: -70px; animation-delay: 0.1s; }
-.p2  { --tx:  10px; --ty: -80px; animation-delay: 0.15s; }
-.p3  { --tx:  65px; --ty: -65px; animation-delay: 0.1s; }
-.p4  { --tx:  80px; --ty:   0px; animation-delay: 0.2s; }
-.p5  { --tx:  65px; --ty:  65px; animation-delay: 0.12s; }
-.p6  { --tx:   5px; --ty:  80px; animation-delay: 0.18s; }
-.p7  { --tx: -65px; --ty:  65px; animation-delay: 0.1s; }
-.p8  { --tx: -80px; --ty:   0px; animation-delay: 0.14s; }
-.p9  { --tx: -35px; --ty: -40px; animation-delay: 0.22s; }
-.p10 { --tx:  35px; --ty: -40px; animation-delay: 0.08s; }
-.p11 { --tx:  40px; --ty:  35px; animation-delay: 0.2s; }
-.p12 { --tx: -40px; --ty:  35px; animation-delay: 0.16s; }
-.p13 { --tx:   0px; --ty: -50px; animation-delay: 0.25s; }
-.p14 { --tx:  50px; --ty:  20px; animation-delay: 0.1s; }
-.p15 { --tx: -50px; --ty:  20px; animation-delay: 0.13s; }
-.p16 { --tx:  20px; --ty:  55px; animation-delay: 0.19s; }
-@keyframes particleBurst {
-    0% {
-        transform: translate(-50%, -50%) translate(0, 0) scale(1.2);
-        opacity: 1;
-    }
-    60% { opacity: 0.8; }
-    100% {
-        transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0);
-        opacity: 0;
-    }
 }
 
 /* キャラクターカードUI */
@@ -714,6 +616,70 @@ body.theme-dark-magic .stat-bar-bg {
     font-size: 0.85rem;
     text-align: right;
     font-weight: bold;
+}
+
+/* ==================================
+   about セクション（AdSense対策コンテンツ）
+================================== */
+.about-section {
+    margin-top: 50px;
+    padding: 30px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.about-heading {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+.about-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    margin-bottom: 24px;
+}
+
+.about-features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.about-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(0,0,0,0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+body.theme-dark-magic .about-feature-item {
+    background: rgba(255,255,255,0.03);
+}
+
+.feature-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.about-feature-item strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.about-feature-item p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
 }
 
 /* ==================================
