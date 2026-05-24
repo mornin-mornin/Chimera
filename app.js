@@ -200,15 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateAdSpace(hasNsfw) {
-        // AdSense審査通過後に下記コメントを外して広告を再有効化
-        // if (hasNsfw) {
-        //     adSpace.classList.add('hidden');
-        // } else {
-        //     adSpace.classList.remove('hidden');
-        // }
-
-        // 審査通過まで常に非表示
-        adSpace.classList.add('hidden');
+        if (hasNsfw) {
+            adSpace.classList.add('hidden');
+        } else {
+            adSpace.classList.remove('hidden');
+        }
     }
 
     function renderHistory() {
@@ -260,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const charResultCard = document.getElementById('character-result');
     const summonAgainBtn = document.getElementById('summon-again-btn');
     const mainTitle = document.getElementById('main-title');
+    const rubiToggleWrapper = document.getElementById('rubi-toggle-wrapper');
 
     mainTitle.addEventListener('click', () => {
         navCharacter.click();
@@ -271,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navGacha.classList.add('active');
         viewCharacter.style.display = 'none';
         viewGacha.style.display = 'block';
+        rubiToggleWrapper.style.display = 'flex'; // ルビトグル表示
         stopFakeSummonTicker();
     });
 
@@ -280,6 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navCharacter.classList.add('active');
         viewGacha.style.display = 'none';
         viewCharacter.style.display = 'block';
+        rubiToggleWrapper.style.display = 'none'; // ルビトグル非表示
         
         // Reset character result state
         charResultCard.classList.add('hidden');
@@ -356,17 +355,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 広告の動的表示切替
-        // AdSense審査通過後に下記コメントを外して広告を再有効化
         const charAdSpace = document.getElementById('char-ad-space');
         if (charAdSpace) {
-            // if (data.hasNsfw) {
-            //     charAdSpace.classList.add('hidden');
-            // } else {
-            //     charAdSpace.classList.remove('hidden');
-            // }
-
-            // 審査通過まで常に非表示
-            charAdSpace.classList.add('hidden');
+            if (data.hasNsfw) {
+                charAdSpace.classList.add('hidden');
+            } else {
+                charAdSpace.classList.remove('hidden');
+            }
         }
 
         summonBook.parentElement.style.display = 'none';
