@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rubiToggleWrapper = document.getElementById('rubi-toggle-wrapper');
 
     mainTitle.addEventListener('click', () => {
-        navCharacter.click();
+        navGacha.click();
     });
 
     navGacha.addEventListener('click', () => {
@@ -487,6 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize default view
-    navCharacter.click();
+    navGacha.click();
 
 });

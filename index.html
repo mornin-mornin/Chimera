@@ -36,8 +36,8 @@
             <h1 class="title" id="main-title" style="cursor: pointer;">キメラ辞典</h1>
             <div class="settings" style="flex-wrap: wrap; justify-content: flex-end; gap: 15px;">
                 <div class="view-tabs">
-                    <button id="nav-character" class="view-tab active">召喚</button>
-                    <button id="nav-gacha" class="view-tab">語録</button>
+                    <button id="nav-gacha" class="view-tab active">語録</button>
+                    <button id="nav-character" class="view-tab">召喚</button>
                 </div>
                 <div id="rubi-toggle-wrapper" style="display: flex; align-items: center; gap: 5px;">
                     <span class="setting-label">ルビ（ふりがな）</span>
@@ -50,7 +50,7 @@
         </header>
 
         <!-- 【ビュー1】：語録（旧単語ガチャ） -->
-        <div id="view-gacha" class="view-section" style="display:none;">
+        <div id="view-gacha" class="view-section">
 
             <div class="tabs" id="main-tabs">
                 <button class="tab active" data-category="all">すべて</button>
@@ -144,7 +144,7 @@
         </div> <!-- /view-gacha -->
 
         <!-- 【ビュー2】：キャラクター生成モード -->
-        <div id="view-character" class="view-section">
+        <div id="view-character" class="view-section" style="display:none;">
             <div class="summon-container">
                 <div class="grimoire" id="summon-book">
                     <div class="book-cover">
